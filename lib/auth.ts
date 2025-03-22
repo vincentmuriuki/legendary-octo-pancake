@@ -1,21 +1,41 @@
-import NextAuth from 'next-auth'
-import { PrismaAdapter } from '@auth/prisma-adapter'
+import NextAuth, { getServerSession, NextAuthOptions } from 'next-auth'
 import prisma from './prisma'
-import CredentialsProvider from 'next-auth/providers/credentials'
+
+import { getServerSession as getServerSessionInner } from 'next-auth'
 import bcrypt from 'bcryptjs'
 
+import CredentialsProviderRaw from 'next-auth/providers/credentials';
+import { redirect } from 'next/navigation';
+const CredentialsProvider = CredentialsProviderRaw as unknown as (options: any) => any;
+
+declare module 'next-auth/jwt' {
+    interface JWT {
+        id: string,
+        email: string,
+        name: string | null
+        role: string
+    }
+}
 declare module 'next-auth' {
     interface Session {
         user: {
             id?: string;
             email?: string;
+            name?: string | null;
+            role?: string;
         }
+    }
+
+    interface User {
+        id: string,
+        email: string,
+        name: string | null
+        role: string
     }
 }
 
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-    adapter: PrismaAdapter(prisma),
+export const authOptions: NextAuthOptions = {
     session: {
         strategy: 'jwt'
     },
@@ -30,10 +50,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     type: 'password'
                 }
             },
-            async authorize(credentials) {
+            async authorize(credentials: any) {
                 if (!credentials?.email || !credentials.password) return null
 
-                const user = await prisma.user.findUnique({
+                const user: any = await prisma.user.findUnique({
                     where: {
                         email: credentials.email
                     }
@@ -43,10 +63,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
                 const validPwd = await bcrypt.compare(credentials.password, user.password)
                 if (!validPwd) return null;
-
                 return {
                     id: user.id,
-                    email: user.email
+                    email: user.email,
+                    name: user.name || '',
+                    role: user.role || 'USER'
                 }
             }
         })
@@ -54,22 +75,59 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
+                token.role = user.id;
                 token.email = user.email;
+                token.name = user.name;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
-            if (token?.id && session.user) {
-                session.user.id = token.id as string,
-                    session.user.email = token.email as string
+            if (token && session.user) {
+                session.user.id = token.sub;
+                session.user.name = token.name
             }
-
+            session.user.role = token.role;
             return session;
-        }
+        },
     },
     pages: {
         signIn: '/login',
         newUser: '/signup'
+    },
+    secret: process.env.NEXTAUTH_SECRET
+}
+
+export const getServerAuthSession = () => getServerSession(authOptions);
+
+
+export async function getServerSessionData() {
+    return await getServerSessionInner(authOptions)
+}
+
+export async function getCurrentUser() {
+    const session = await getServerSession(authOptions)
+    return session?.user
+}
+
+export async function requireRole(
+    session: any | null,
+    requiredRole: any = 'USER'
+) {
+    if (!session?.user) {
+        redirect('/login')
     }
-})
+
+    const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true }
+    })
+
+    if (!user || (user.role !== requiredRole && requiredRole !== 'USER')) {
+        redirect('/unauthorized')
+    }
+}
+
+export function checkAdminAccess(user?: any): boolean {
+    return user?.role === 'ADMIN'
+}
