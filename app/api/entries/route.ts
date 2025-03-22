@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   if (search) {
     where.OR = [
       { title: { contains: search, mode: 'insensitive' } },
-      { content: { contains: search, mode: 'insensitive' } }
+      { content: { contains: search, mode: 'insensitive' } },
     ]
   }
 
@@ -31,6 +31,8 @@ export async function GET(request: Request) {
       lte: new Date(endDate)
     }
   }
+
+  where.deletedAt = null
 
   const entries = await prisma.journalEntry.findMany({
     where,
