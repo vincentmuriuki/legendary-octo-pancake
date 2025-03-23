@@ -47,6 +47,7 @@ model JournalEntry {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt()
   categoryIds String[]
+  deletedAt   DateTime?
 
   @@index([userId, date])
   @@index([userId])
