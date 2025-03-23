@@ -1,5 +1,5 @@
-// src/components/admin/UsersTable.tsx
 'use client';
+
 import { ColumnDef, Row } from '@tanstack/react-table';
 import { User } from '@prisma/client';
 import { DataTable } from '@/components/ui/data-table';
