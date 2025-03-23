@@ -5,7 +5,7 @@ import Prisma from "@/lib/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -30,7 +30,7 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { entryId: string } }
+  { params }: { params: Promise<{ entryId: string }> }
 ) {
   try {
     const { entryId } = await params;
