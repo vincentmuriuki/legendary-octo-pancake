@@ -5,23 +5,23 @@ import { EntryForm } from '@/components/journal/EntryForm';
 import { useEffect, useState } from 'react';
 
 export default function EditEntryPage({ user }: { user: any }) {
-  const { id } = useParams();
+  const { entryId } = useParams();
   const router = useRouter();
   const [entry, setEntry] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     Promise.all([
-      fetch(`/api/entries/${id}`).then((res) => res.json()),
+      fetch(`/api/entries/${entryId}`).then((res) => res.json()),
       fetch(`/api/entries/single`).then((res) => res.json()),
     ]).then(([entryData, categoriesData]) => {
       setEntry(entryData);
       setCategories(categoriesData);
     });
-  }, [id]);
+  }, [entryId]);
 
   const handleSubmit = async (data: any) => {
-    const response = await fetch(`/api/entries/update/${id}`, {
+    const response = await fetch(`/api/entries/update/${entryId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
