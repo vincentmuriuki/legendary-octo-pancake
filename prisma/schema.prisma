@@ -19,6 +19,56 @@ model User {
   email         String         @unique
   emailVerified DateTime?
   password      String?
+  categories    Category[]
+  entries       JournalEntry[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+
+  twoFactorEnabled Boolean  @default(false)
+  twoFactorSecret  String?
+  backupCodes      String[]
+  role             Role     @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model JournalEntry {
+  id          String     @id @default(uuid())
+  title       String
+  content     String
+  date        DateTime   @default(now())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  categories  Category[]
+  sentiment   Sentiment?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt()
+  categoryIds String[]
+  deletedAt   DateTime?
+
+  @@index([userId, date])
+  @@index([userId])
+}
+
+model Category {
+  id        String         @id @default(uuid())
+  name      String
+  isDefault Boolean        @default(false)
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  entries   JournalEntry[]
+}
+
+model Sentiment {
+  id        String       @id @default(uuid())
+  entryId   String       @unique
+  entry     JournalEntry @relation(fields: [entryId], references: [id])
+  score     Float
+  keywords  String[]
+  createdAt DateTime     @default(now())
+
+  @@index([entryId])
 }
