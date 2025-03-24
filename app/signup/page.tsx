@@ -17,6 +17,10 @@ import { signupSchema } from '@/lib/validators';
 import { z } from 'zod';
 import { signIn } from 'next-auth/react';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { motion } from 'framer-motion';
+import { AlertCircle, Lock } from 'lucide-react';
+
 export default function SignupPage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof signupSchema>>({
@@ -59,6 +63,20 @@ export default function SignupPage() {
   return (
     <div className='min-h-screen flex items-center justify-center bg-gray-50'>
       <Form {...form}>
+        {form.formState.errors.root && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className='mb-6'
+          >
+            <Alert variant='destructive'>
+              <AlertCircle className='h-4 w-4' />
+              <AlertDescription>
+                {form.formState.errors.root.message}
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        )}
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className='w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md'
@@ -103,11 +121,22 @@ export default function SignupPage() {
             )}
           />
 
-          {form.formState.errors.root && (
-            <p className='text-sm font-medium text-destructive'>
-              {form.formState.errors.root.message}
-            </p>
-          )}
+          <div className='flex justify-between'>
+            <button
+              type='button'
+              className='text-sm text-neutral-600 hover:text-neutral-800'
+              onClick={() => router.push('/signup')}
+            >
+              Homepage
+            </button>
+            <button
+              type='button'
+              className='text-sm text-neutral-600 hover:text-neutral-800'
+              onClick={() => router.push('/login')}
+            >
+              Login.
+            </button>
+          </div>
 
           <Button
             type='submit'
