@@ -7,7 +7,7 @@ import { WordCountTrend } from '@/components/summary/WordCountTrend';
 import { MoodTimeline } from '@/components/summary/MoodTimeline';
 import { TimeOfDayAnalysis } from '@/components/summary/TimeOfDayAnalysis';
 import { EntryLengthByCategory } from '@/components/summary/EntryLengthByCategory';
-import { WordCloudComponent } from '@/components/summary/WordCloud';
+// import { WordCloudComponent } from '@/components/summary/WordCloud';
 import { SentimentRadar } from '@/components/summary/SentimentRadar';
 import { WritingStreaks } from '@/components/summary/WritingStreaks';
 import { TimePeriodSelector } from '@/components/summary/TimePeriodSelector'

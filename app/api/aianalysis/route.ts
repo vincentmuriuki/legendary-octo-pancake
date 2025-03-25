@@ -43,12 +43,12 @@ Ensure valid JSON with proper quotes and syntax.`;
           controller.enqueue(chunk);
           const text = chunk.toString();
           const lines = text.split('\n').filter(line => line.trim() && !line.includes('[DONE]'));
-          
+
           lines.forEach(line => {
             try {
               const jsonStr = line.replace(/^data:\s*/, '');
               if (!jsonStr) return;
-              
+
               const parsed = JSON.parse(jsonStr);
               if (parsed.choices?.[0]?.delta?.content) {
                 fullContent += parsed.choices[0].delta.content;
@@ -82,7 +82,7 @@ Ensure valid JSON with proper quotes and syntax.`;
               const jsonString = cleanContent.slice(jsonStart, jsonEnd + 1);
               analysis = JSON.parse(jsonString);
             }
-            
+
             if (typeof analysis.score !== 'number' || !Array.isArray(analysis.keywords)) {
               throw new Error('Invalid analysis structure');
             }
