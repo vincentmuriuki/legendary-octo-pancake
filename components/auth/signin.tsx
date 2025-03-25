@@ -130,17 +130,17 @@ export function SignIn() {
           )}
         />
 
-        <div className="flex justify-between">
+        <div className='flex justify-between'>
           <button
-            type="button"
-            className="text-sm text-neutral-600 hover:text-neutral-800"
+            type='button'
+            className='text-sm text-neutral-600 hover:text-neutral-800'
             onClick={() => router.push('/signup')}
           >
             No Account? Sign Up
           </button>
           <button
-            type="button"
-            className="text-sm text-neutral-600 hover:text-neutral-800"
+            type='button'
+            className='text-sm text-neutral-600 hover:text-neutral-800'
             onClick={() => router.push('/forgot-password')}
           >
             Forgot password?
