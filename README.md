@@ -11,7 +11,6 @@ A modern journaling application with user authentication, rich entries, and data
 - 🗂️ Category organization system
 - 📊 Data visualization (word clouds, heatmaps)
 - 🔍 Search and filter entries
-- 🎨 Responsive UI with dark/light mode
 - 🛡️ Admin dashboard (user management)
 
 ## Getting Started 🚀
