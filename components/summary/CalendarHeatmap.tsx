@@ -26,7 +26,7 @@ const CalendarHeatmap = dynamic(() => import('react-calendar-heatmap'), {
   ),
 })
 
-export function CalendarHeatmapComponent({ userId }: { userId: string }) {
+export function CalendarHeatmapComponent({ userId, dateRange }: { userId: string, dateRange: any }) {
   const [heatmap, setHeatmap] = useState<Record<string, number>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [tooltip, setTooltip] = useState<TooltipData | null>(null)

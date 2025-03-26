@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 
 import CredentialsProviderRaw from 'next-auth/providers/credentials';
 import { redirect } from 'next/navigation';
+import { bcryptCompare } from '@/utils/utils';
 const CredentialsProvider = CredentialsProviderRaw as unknown as (options: any) => any;
 
 declare module 'next-auth/jwt' {
@@ -61,7 +62,7 @@ export const authOptions: NextAuthOptions = {
 
                 if (!user) return null;
 
-                const validPwd = await bcrypt.compare(credentials.password, user.password)
+                const validPwd = await bcryptCompare(credentials.password, user.password)
                 if (!validPwd) return null;
                 return {
                     id: user.id,

@@ -1,10 +1,10 @@
-import prisma from '@/lib/prisma'
+import prisma from '../lib/prisma'
 import bcrypt from 'bcryptjs'
 
 export async function seedDefaultCategories(userId: string) {
     Promise.all([
         await prisma.user.upsert({
-            where: { email: 'admin@example.com' },
+            where: { email: 'admin@journal.com' },
             update: {},
             create: {
                 email: 'admin@journal.com',
