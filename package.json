@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx prisma generate && npx prisma db push && npx prisma seed",
     "test": "NODE_ENV=test jest --testPathPattern=unit",
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "test:integration": "NODE_ENV=test jest --testPathPattern=integration",
-    "seed": "npx prisma db seed"
+    "seed": "npx prisma db seed",
+    "postinstall": "npx prisma generate && npx prisma db push --accept-data-loss"
   },
   "prisma": {
     "seed": "tsx scripts/seed.ts"
