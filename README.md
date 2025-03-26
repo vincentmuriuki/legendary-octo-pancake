@@ -55,6 +55,16 @@ yarn dev
 ```
 Open http://localhost:3000 in your browser.
 
+## To Run Tests
+```bash
+yarn test
+
+# Integration tests
+yarn test:integration
+
+# e2e tests
+yarn test:e2e
+```
 ## Default Credentials 🔑
 ```
 Admin Account:
