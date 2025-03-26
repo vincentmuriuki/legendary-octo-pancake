@@ -18,6 +18,10 @@ import {
 } from '@/components/ui/form';
 import { z } from 'zod';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { motion } from 'framer-motion';
+import { AlertCircle, Lock } from 'lucide-react';
+
 export function SignIn() {
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -55,6 +59,35 @@ export function SignIn() {
 
   return (
     <Form {...form}>
+      <div className='flex flex-col items-center mb-8'>
+        <motion.div
+          className='mb-6'
+          whileHover={{ scale: 1.1 }}
+          transition={{ type: 'spring', stiffness: 300 }}
+        >
+          <div className='p-4 rounded-full bg-neutral-100 border border-neutral-200'>
+            <Lock className='h-8 w-8 text-neutral-600' />
+          </div>
+        </motion.div>
+        <h1 className='text-3xl font-bold text-neutral-800'>Welcome Back</h1>
+        <p className='text-neutral-500 mt-2'>Please sign in to continue</p>
+      </div>
+
+      {form.formState.errors.root && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className='mb-6'
+        >
+          <Alert variant='destructive'>
+            <AlertCircle className='h-4 w-4' />
+            <AlertDescription>
+              {form.formState.errors.root.message}
+            </AlertDescription>
+          </Alert>
+        </motion.div>
+      )}
+
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className='space-y-6'
@@ -97,11 +130,22 @@ export function SignIn() {
           )}
         />
 
-        {form.formState.errors.root && (
-          <p className='text-sm font-medium text-destructive'>
-            {form.formState.errors.root.message}
-          </p>
-        )}
+        <div className='flex justify-between'>
+          <button
+            type='button'
+            className='text-sm text-neutral-600 hover:text-neutral-800'
+            onClick={() => router.push('/signup')}
+          >
+            No Account? Sign Up
+          </button>
+          <button
+            type='button'
+            className='text-sm text-neutral-600 hover:text-neutral-800'
+            onClick={() => router.push('/forgot-password')}
+          >
+            Forgot password?
+          </button>
+        </div>
 
         <Button
           type='submit'
